@@ -1,28 +1,32 @@
-from idlelib import query
-
-from aiogram import Router, F
+from pydoc import classname
+from aiogram import Router
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
-from python_opendota.apis.tags import benchmarks_api
-from python_opendota.apis.tags.players_api import PlayersApi
+from aiogram.types import CallbackQuery,Message
+from pip._internal.utils import logging
 
-from data import facts
 from callback.callbackdota import DotaIdCallbackData
-from aiogram.types import CallbackQuery, Message
-import python_opendota
+from staiti.idstate import IdStateGroup
+
+import opendota
+
+# Initialize the API-connection object
+client = opendota.OpenDota()
+
+# client.get_player('player-id')
 
 iD_router = Router()
 
-configuration = python_opendota.Configuration(
-    host="http://api.opendota.com/api"
-)
+LOGGER = logging.getLogger(__name__)
 
 
 @iD_router.callback_query(DotaIdCallbackData.filter())
-async def Id_poisck(query: CallbackQuery, callback_data: ..., state: FSMContext):
-    with python_opendota.ApiClient(configuration) as api_client:
-        api_instance = PlayersApi(api_client)
+async def get_player(query: CallbackQuery, state: FSMContext):
+    await query.message.answer("🌀Введите nickname пользователя,\nПрофиль которого вам нужно найти🌀")
+    await state.set_state(IdStateGroup.fill_id)
 
-        print(api_instance.players_account_id_get({
-            'account_id': 10
-        },
-        accept_content_types={"application", "json",}))
+
+@iD_router.message(StateFilter(IdStateGroup.fill_id))
+async def api_say(message: Message, state: FSMContext):
+    await message.answer('Ищем...')
+    finded = client.search_player(message.text)[0]
