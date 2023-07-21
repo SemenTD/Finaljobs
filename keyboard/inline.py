@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from callback.callbackdota import DotaIdCallbackData, DotaFactsCallbackData
 
 user_ID = InlineKeyboardButton(
-        text='Ввести ID игрока',
+        text='Ввести nikname игрока',
         callback_data=DotaIdCallbackData().pack())
 
 dota_facts =InlineKeyboardButton(

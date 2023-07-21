@@ -1,4 +1,4 @@
-import asyncio  # Работа с асинхронностью
+import asyncio
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -11,12 +11,11 @@ from handlers.for_id import iD_router
 
 def register_all_router(dp: Dispatcher):
     dp.include_router(handlers.common.common_router)
-    # dp.include_router(handlers.profile_handler.get_profile_router)
     dp.include_router(handlers.for_facts.facts_router)
     dp.include_router(iD_router)
 
 async def main():
-    bot = Bot(token=config.token)
+    bot = Bot(token=config.token, parse_mode='HTML')
     dp = Dispatcher(storage=MemoryStorage())  # Менеджер бота
 
     register_all_router(dp)
@@ -34,3 +33,7 @@ if __name__ == '__main__':  # Если мы запускаем конкретн�
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         print('Bot stopped')
+
+
+
+# GG.uban.WINLINE

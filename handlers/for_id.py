@@ -10,10 +10,8 @@ from staiti.idstate import IdStateGroup
 
 import opendota
 
-# Initialize the API-connection object
-client = opendota.OpenDota()
 
-# client.get_player('player-id')
+client = opendota.OpenDota()
 
 iD_router = Router()
 
@@ -30,3 +28,8 @@ async def get_player(query: CallbackQuery, state: FSMContext):
 async def api_say(message: Message, state: FSMContext):
     await message.answer('Ищем...')
     finded = client.search_player(message.text)[0]
+    print(finded)
+    full_info = client.get_player(finded['account_id'])
+    g = full_info['profile']['avatarfull']
+    print(full_info)
+    await message.answer_photo(g, caption=f"Username: {full_info['profile']['personaname']}")
